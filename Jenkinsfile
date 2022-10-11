@@ -38,6 +38,7 @@ pipeline {
           pip install gunicorn
           sudo systemctl restart nginx
           python3 -m gunicorn -w 4 application:app -b 0.0.0.0 --daemon
+          sleep 5000
           '''
         }
       }
