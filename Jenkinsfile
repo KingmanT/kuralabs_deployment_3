@@ -40,6 +40,7 @@ pipeline {
           pip install gunicorn
           sudo systemctl restart nginx
           gunicorn -w 4 application:app -b 0.0.0.0 --daemon
+          cat
           '''
         }
       }
