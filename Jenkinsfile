@@ -12,6 +12,14 @@ pipeline {
         flask run &
         '''
      }
+      post {
+        success {
+          slackSend (message: "FYI: ${BUILD_TAG} has SUCCESSFULLY completed its 'BUILD' stage")
+        }
+        failure {
+          slackSend (message: "ATTENTION: ${BUILD_TAG} has FAILED its 'BUILD' stage")
+          }
+        }
    }
     stage ('test') {
       steps {
@@ -25,7 +33,12 @@ pipeline {
         always {
           junit 'test-reports/results.xml'
         }
-       
+       success {
+          slackSend (message: "FYI: ${BUILD_TAG} has SUCCESSFULLY completed its 'TEST' stage")
+        }
+        failure {
+          slackSend (message: "ATTENTION: ${BUILD_TAG} has FAILED its 'TEST' stage")
+        }
       }
     }
       stage ('Deploy') {
@@ -42,6 +55,14 @@ pipeline {
           JENKINS_NODE_COOKIE=stayAlive gunicorn -w 4 application:app -b 0.0.0.0 --daemon          
           '''
         }
+        post {
+        success {
+          slackSend (message: "FYI: ${BUILD_TAG} has SUCCESSFULLY completed its 'DEPLOY' stage")
+        }
+        failure {
+          slackSend (message: "ATTENTION: ${BUILD_TAG} has FAILED its 'DEPLOY' stage")
+        }
+    } 
       }
   }
  }
